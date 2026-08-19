@@ -13,16 +13,37 @@ RUN apt-get update && apt-get upgrade -y \
 RUN apt-get update && apt-get install --no-install-recommends -y \
     sudo \
     git \
+    libaria-dev \
+    libopencv-dev \
     libpoco-dev \
+    libqt5core5t64 \
     libsqlite3-dev \
     libyaml-cpp-dev \
     uuid-dev \
     libeigen3-dev \
     nlohmann-json3-dev \
+    python3-yaml \
+    qt5-qmake \
+    qtbase5-dev \
     ros-${ROS_DISTRO}-bondcpp \
     ros-${ROS_DISTRO}-tinyxml2-vendor \
     ros-${ROS_DISTRO}-diagnostic-msgs \
     ros-${ROS_DISTRO}-backward-ros \
+    ros-${ROS_DISTRO}-moveit \
+    ros-${ROS_DISTRO}-moveit-configs-utils \
+    ros-${ROS_DISTRO}-moveit-kinematics \
+    ros-${ROS_DISTRO}-moveit-msgs \
+    ros-${ROS_DISTRO}-moveit-planners \
+    ros-${ROS_DISTRO}-moveit-ros-move-group \
+    ros-${ROS_DISTRO}-moveit-ros-visualization \
+    ros-${ROS_DISTRO}-moveit-ros-warehouse \
+    ros-${ROS_DISTRO}-moveit-servo \
+    ros-${ROS_DISTRO}-moveit-setup-assistant \
+    ros-${ROS_DISTRO}-moveit-simple-controller-manager \
+    ros-${ROS_DISTRO}-nav2-bringup \
+    ros-${ROS_DISTRO}-nav2-msgs \
+    ros-${ROS_DISTRO}-nav2-rviz-plugins \
+    ros-${ROS_DISTRO}-navigation2 \
     && rm -rf /var/lib/apt/lists/*
     
 RUN echo $USERNAME ALL=\(root\) NOPASSWD:ALL > /etc/sudoers.d/$USERNAME \
@@ -43,14 +64,15 @@ WORKDIR /home/$USERNAME/colcon_ws/src
 RUN git clone https://github.com/CollaborativeRoboticsLab/capabilities2.git -b experience-integration
 RUN git clone https://github.com/CollaborativeRoboticsLab/fabric.git -b experience-integration
 RUN git clone https://github.com/CollaborativeRoboticsLab/fabric_capabilities.git -b experience-integration
-RUN git clone https://github.com/CollaborativeRoboticsLab/prompt_tools.git -b experience-integration
+RUN git clone --recurse-submodules https://github.com/CollaborativeRoboticsLab/prompt_tools.git -b experience-integration
 RUN git clone https://github.com/CollaborativeRoboticsLab/prompt_capabilities.git -b experience-integration
-RUN git clone https://github.com/CollaborativeRoboticsLab/fp_perception.git
-RUN git clone https://github.com/CollaborativeRoboticsLab/fp_perception_capabilities.git
-RUN git clone https://github.com/CollaborativeRoboticsLab/nav2_capabilities.git 
+RUN git clone https://github.com/CollaborativeRoboticsLab/fp_perception.git -b experience-integration
+RUN git clone https://github.com/CollaborativeRoboticsLab/fp_perception_capabilities.git -b experience-integration
+RUN git clone https://github.com/CollaborativeRoboticsLab/nav2_capabilities.git -b experience-integration
 RUN git clone https://github.com/CollaborativeRoboticsLab/grasping.git
+RUN git clone https://github.com/CollaborativeRoboticsLab/grippers.git
 RUN git clone https://github.com/CollaborativeRoboticsLab/tmr_ros2.git
-RUN git clone https://github.com/CollaborativeRoboticsLab/omron_amr.git
+RUN git clone --recurse-submodules https://github.com/CollaborativeRoboticsLab/omron_amr.git
 RUN git clone https://github.com/CollaborativeRoboticsLab/omron_moma.git
 # RUN git clone https://github.com/CollaborativeRoboticsLab/moveit2_capabilities.git
 # RUN git clone https://github.com/CollaborativeRoboticsLab/grasping_omron_moma.git
