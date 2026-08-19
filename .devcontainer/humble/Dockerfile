@@ -16,17 +16,24 @@ RUN apt-get update && apt-get upgrade -y \
 RUN apt-get update && apt-get install --no-install-recommends -y \
     sudo \
     git \
-    libopencv-dev \
+    curl \
     libpoco-dev \
     libqt5core5t64 \
     libsqlite3-dev \
     libyaml-cpp-dev \
     uuid-dev \
     libeigen3-dev \
+    libcurl4-openssl-dev \
     nlohmann-json3-dev \
     python3-yaml \
     qt5-qmake \
     qtbase5-dev \
+    libportaudio2 \
+    portaudio19-dev \
+    python3-pyaudio \
+    alsa-utils \
+    ros-${ROS_DISTRO}-vision-opencv \
+    ros-${ROS_DISTRO}-cv-bridge \
     ros-${ROS_DISTRO}-bondcpp \
     ros-${ROS_DISTRO}-tinyxml2-vendor \
     ros-${ROS_DISTRO}-diagnostic-msgs \
