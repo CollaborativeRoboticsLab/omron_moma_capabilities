@@ -16,7 +16,6 @@ RUN apt-get update && apt-get upgrade -y \
 RUN apt-get update && apt-get install --no-install-recommends -y \
     sudo \
     git \
-    libaria-dev \
     libopencv-dev \
     libpoco-dev \
     libqt5core5t64 \
@@ -47,6 +46,8 @@ RUN apt-get update && apt-get install --no-install-recommends -y \
     ros-${ROS_DISTRO}-nav2-msgs \
     ros-${ROS_DISTRO}-nav2-rviz-plugins \
     ros-${ROS_DISTRO}-navigation2 \
+    ros-${ROS_DISTRO}-teleop-twist-keyboard \
+    ros-${ROS_DISTRO}-teleop-twist-joy \
     && rm -rf /var/lib/apt/lists/*
     
     
