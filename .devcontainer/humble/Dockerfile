@@ -47,6 +47,7 @@ RUN git clone https://github.com/CollaborativeRoboticsLab/capabilities2.git
 RUN git clone https://github.com/CollaborativeRoboticsLab/fabric.git
 RUN git clone https://github.com/CollaborativeRoboticsLab/fabric_capabilities.git
 RUN git clone https://github.com/CollaborativeRoboticsLab/prompt_tools.git
+RUN git clone https://github.com/CollaborativeRoboticsLab/prompt_capabilities.git
 RUN git clone https://github.com/CollaborativeRoboticsLab/fp_perception.git
 RUN git clone https://github.com/CollaborativeRoboticsLab/fp_perception_capabilities.git
 RUN git clone https://github.com/CollaborativeRoboticsLab/nav2_capabilities.git

@@ -40,13 +40,14 @@ RUN echo "source /opt/ros/${ROS_DISTRO}/setup.bash" >> ~/.bashrc
 # make sure folders exist
 WORKDIR /home/$USERNAME/colcon_ws/src
 
-RUN git clone https://github.com/CollaborativeRoboticsLab/capabilities2.git
-RUN git clone https://github.com/CollaborativeRoboticsLab/fabric.git
-RUN git clone https://github.com/CollaborativeRoboticsLab/fabric_capabilities.git
-RUN git clone https://github.com/CollaborativeRoboticsLab/prompt_tools.git
+RUN git clone https://github.com/CollaborativeRoboticsLab/capabilities2.git -b experience-integration
+RUN git clone https://github.com/CollaborativeRoboticsLab/fabric.git -b experience-integration
+RUN git clone https://github.com/CollaborativeRoboticsLab/fabric_capabilities.git -b experience-integration
+RUN git clone https://github.com/CollaborativeRoboticsLab/prompt_tools.git -b experience-integration
+RUN git clone https://github.com/CollaborativeRoboticsLab/prompt_capabilities.git -b experience-integration
 RUN git clone https://github.com/CollaborativeRoboticsLab/fp_perception.git
 RUN git clone https://github.com/CollaborativeRoboticsLab/fp_perception_capabilities.git
-RUN git clone https://github.com/CollaborativeRoboticsLab/nav2_capabilities.git
+RUN git clone https://github.com/CollaborativeRoboticsLab/nav2_capabilities.git 
 RUN git clone https://github.com/CollaborativeRoboticsLab/grasping.git
 RUN git clone https://github.com/CollaborativeRoboticsLab/tmr_ros2.git
 RUN git clone https://github.com/CollaborativeRoboticsLab/omron_amr.git
@@ -54,5 +55,6 @@ RUN git clone https://github.com/CollaborativeRoboticsLab/omron_moma.git
 # RUN git clone https://github.com/CollaborativeRoboticsLab/moveit2_capabilities.git
 # RUN git clone https://github.com/CollaborativeRoboticsLab/grasping_omron_moma.git
 # RUN git clone https://github.com/CollaborativeRoboticsLab/supervisor.git
+# RUN git clone https://github.com/CollaborativeRoboticsLab/experience.git
 # RUN git clone https://github.com/CollaborativeRoboticsLab/fabric_generator_experience.git
 # RUN git clone https://github.com/CollaborativeRoboticsLab/fabric_generator_prompttools.git
