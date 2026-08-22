@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+<?xml-model href="http://download.ros.org/schema/package_format3.xsd" schematypens="http://www.w3.org/2001/XMLSchema"?>
+<package format="3">
+  <name>omron_moma_capabilities</name>
+  <version>0.1.0</version>
+  <description>Omron-specific mobile-manipulator feasibility adapter built on top of grasping feasibility services.</description>
+  <maintainer email="kalanaratnayake95@gmail.com">ubuntu</maintainer>
+  <license>MIT</license>
+
+  <buildtool_depend>ament_cmake</buildtool_depend>
+
+  <depend>launch</depend>
+  <depend>launch_ros</depend>
+  <depend>mobile_manipulator</depend>
+  <depend>yaml_cpp_vendor</depend>
+
+  <test_depend>ament_lint_auto</test_depend>
+  <test_depend>ament_lint_common</test_depend>
+
+  <export>
+    <build_type>ament_cmake</build_type>
+  </export>
+</package>

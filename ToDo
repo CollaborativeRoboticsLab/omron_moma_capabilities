@@ -1,0 +1,143 @@
+# Mobile Manipulator Feasibility and Fallback Implementation ToDo
+
+## 1. Freeze package boundaries
+
+- [x] Keep arm-only feasibility and arm execution in the grasping stack.
+- [x] Keep generic arm-plus-base reasoning in `mobile_manipulator`
+- [x] Keep mobile-manipulator feasibility capabilities in `mobile_manipulator_capabilities`.
+- [ ] Keep Omron-specific base pose generation, Nav2 wiring, and frame assumptions in `omron_moma`.
+- [x] Decide `mobile_manipulator` is a interface/message, arm and base coordination package and `mobile_manipulator_capabilities` is the runner package.
+- [ ] Document the ownership boundary in the README files of `grasping`, `mobile_manipulator`, `mobile_manipulator_capabilities`, and `omron_moma_capabilities`.
+
+## 2. Define grasping feasibility service contracts
+
+- [x] Add a Cartesian feasibility service in the grasping stack.
+- [x] Request fields: `geometry_msgs/Pose pose`, `string frame_id`, `string mode`.
+- [x] Supported Cartesian modes: `arm_only_ik`, `arm_only_plan`.
+- [x] Add a joint feasibility service in the grasping stack.
+- [x] Request fields: `string[] joint_names`, `float64[] joint_positions`, `string mode`.
+- [x] Supported joint modes: `state_validity`, `plan`.
+- [x] Standardize response fields for both services.
+- [x] Response fields should include at least `bool feasible`, `string mode_used`, `string failure_reason`, `string suggested_fallback`, `string message`.
+- [x] Decide whether to include optional resolved outputs in the response such as transformed target pose, IK joint solution, and planning frame.
+- [x] Decide whether to return contact information or collision object names when feasibility fails because of the scene.
+
+## 3. Implement grasping feasibility services
+
+- [x] Add a dedicated rclcpp or rclpy feasibility node in the grasping stack.
+- [x] Reuse existing transform, workspace-area, IK, planning-scene, and planning logic from `motion_execution_node` where possible.
+- [x] Reuse state-validity logic patterns from `workspace_creation_node` where possible.
+- [ ] Avoid duplicating MoveIt request-building logic across execution and feasibility paths; extract helpers if needed.
+- [x] Add ROS parameters for service names, planning group, end effector link, planning frame, and timeouts.
+
+## 4. Cartesian feasibility behavior in grasping
+
+- [x] Validate that `frame_id` is present and transformable into the planning frame.
+- [x] Reject targets outside the configured workspace area before MoveIt calls.
+- [x] For `arm_only_ik`, seed IK with the current planning joint state and set collision avoidance on.
+- [x] Return `feasible=true` only when the IK request succeeds.
+- [x] Populate `failure_reason` for transform failure, stale joint state, IK failure, and workspace-area rejection.
+- [x] For `arm_only_plan`, first compute a valid target joint state or pose target, then run a planning-only check without execution.
+- [x] Decide whether `arm_only_plan` should prefer a joint-goal request from IK or allow pose-constrained fallback planning.
+- [x] If arm-only planning fails but a base move could help, set `suggested_fallback=move_base_then_arm`.
+
+## 5. Joint feasibility behavior in grasping
+
+- [x] Validate that `joint_names` is non-empty.
+- [x] Validate that `joint_names` and `joint_positions` have matching lengths.
+- [x] For `state_validity`, call MoveIt state validity against the current planning scene.
+- [x] For `plan`, build a planning-only joint-goal request from the current state to the requested state.
+- [x] Return structured failure reasons for invalid request shape, missing joints, collision, constraint violation, and planner failure.
+
+## 6. Add tests for grasping feasibility
+
+- [ ] Unit test request validation and mode parsing.
+- [ ] Unit test workspace-area rejection logic.
+- [ ] Unit test response mapping from MoveIt error codes to `failure_reason` and `message`.
+- [ ] Add integration tests or launch tests for successful IK, failed IK, valid joint state, and invalid joint state.
+- [ ] Add CLI examples to docs for calling both feasibility services.
+
+## 7. Define mobile manipulator service contracts
+
+- [x] Create a new `mobile_manipulator` package if it will own shared messages and services.
+- [x] Add a task feasibility service for mobile manipulator reasoning.
+- [x] Request fields: `geometry_msgs/Pose pose`, `string frame_id`, `string mode`.
+- [x] Supported task modes: `arm_only_ik`, `arm_only_plan`, `mobile_manipulator`.
+- [x] Standardize response fields with grasping feasibility responses.
+- [x] Add optional mobile-manipulator-specific response fields such as candidate base pose, candidate score, projected base frame, and next recommended action.
+
+## 8. Implement generic mobile manipulator feasibility node
+
+- [ ] Create a new rclcpp node in `mobile_manipulator` dedicated to orchestration.
+- [x] For `arm_only_ik` and `arm_only_plan`, forward directly to the grasping Cartesian feasibility service.
+- [x] For `mobile_manipulator`, first call arm-only feasibility.
+- [x] If arm-only feasibility succeeds, return success immediately without base reasoning.
+- [x] If arm-only feasibility fails, request or compute candidate base poses.
+- [x] Re-check grasping feasibility for each candidate base pose.
+- [x] Return the first feasible or best-scored base pose with `suggested_fallback=move_base_then_arm`.
+- [ ] Define how candidate scoring works: shortest base move, highest arm margin, lowest collision risk, or simplest first-valid strategy.
+- [ ] Define how many candidates to evaluate and when to stop.
+
+## 9. Define Omron-specific base reasoning responsibilities
+
+- [ ] Decide whether the Omron adapter lives in `omron_moma`.
+- [x] Implement base-pose candidate generation relative to the target pose.
+- [ ] Decide the projection frame for target-driven base reasoning: likely `map` for navigation and `base_link` for arm-relative reach checks. but if the target (workspace) is defined in world coordinates, the adapter may need to transform it into the map frame first.
+- [x] Define stand-off distance, orientation heuristics, and side-approach policy for the Omron platform.
+- [ ] Account for the actual footprint and safety offsets of the LD base.
+- [ ] Define how the adapter checks candidate base poses against Nav2 costmaps or map occupancy.
+- [x] Define how the adapter publishes or returns the chosen base target pose.
+
+## 10. Integrate generic node with Omron adapter
+
+- [x] Add a client or plugin boundary between generic mobile-manipulator feasibility and Omron-specific base candidate generation.
+- [x] Avoid hard-coding Omron frame names or Nav2 topics in the generic layer.
+- [x] Make Omron-specific values parameter-driven where possible.
+- [x] Add launch files that start the task-feasibility service alongside grasping and Nav2.
+- [ ] Ensure the Humble and Jazzy devcontainer/workspace setup includes the new repos and packages as needed.
+
+## 11. Add capability interfaces and providers
+
+- [x] Keep `moveit2_capabilities` focused on arm-only feasibility and arm execution.
+- [x] Add a `CheckCartesianFeasibilityRunner` provider that calls the grasping Cartesian feasibility service.
+- [x] Add a `CheckJointFeasibilityRunner` provider that calls the grasping joint feasibility service.
+- [x] Add provider YAMLs with configuration parameters and runtime outputs for feasibility results.
+- [x] Create `mobile_manipulator_capabilities` runners for task-feasibility queries.
+- [ ] Create a runner for the full fallback policy: arm check, base reposition routine, re-check, then arm execution.
+- [ ] Decide whether base execution is part of the same runner or split into explicit feasibility and execution runners.
+
+## 12. Define LLM-facing policy outputs
+
+- [x] Standardize machine-readable `failure_reason` values.
+- [x] Standardize machine-readable `suggested_fallback` values.
+- [x] Ensure responses are easy for an LLM or planner to branch on without parsing free text.
+- [ ] Add examples showing how Fabric or higher-level planners should interpret feasibility responses.
+
+## 13. Documentation and examples
+
+- [ ] Update grasping docs to describe both feasibility services and how they differ from execution actions.
+- [ ] Document that IK success is not the same as planning success.
+- [x] Update `mobile_manipulator` README with package purpose and ownership boundary.
+- [x] Update `mobile_manipulator_capabilities` README with the fallback policy flow.
+- [x] Update `omron_moma_capabilities` docs with Omron-specific base reasoning and launch instructions.
+- [ ] Add sequence diagrams for arm-only success and base-plus-arm fallback.
+
+## 14. Validation milestones
+
+- [ ] Milestone 1: Cartesian arm-only IK feasibility works against the current scene.
+- [ ] Milestone 2: Cartesian arm-only planning feasibility works without execution.
+- [ ] Milestone 3: Joint state validity and planning feasibility both work.
+- [ ] Milestone 4: Mobile manipulator task feasibility returns a valid base candidate when arm-only fails.
+- [ ] Milestone 5: Base move followed by arm re-check works end-to-end on Omron.
+- [ ] Milestone 6: Capability runners expose the full policy to the higher-level planner.
+
+## 15. Suggested implementation order
+
+- [x] First, define the `.srv` contracts and freeze response fields.
+- [x] Second, implement the grasping feasibility node and test it directly.
+- [x] Third, add arm-only feasibility runners in `moveit2_capabilities`.
+- [x] Fourth, create the shared `mobile_manipulator` message or interface package if needed.
+- [x] Fifth, implement the generic task-feasibility node.
+- [x] Sixth, implement the Omron-specific base candidate adapter.
+- [x] Seventh, add the full mobile-manipulator capability runners.
+- [ ] Eighth, validate the complete fallback loop on the robot or representative simulation.

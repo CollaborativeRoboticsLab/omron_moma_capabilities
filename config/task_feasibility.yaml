@@ -1,0 +1,12 @@
+task_feasibility_service_node:
+  ros__parameters:
+    task_feasibility_service_name: check_task_feasibility
+    grasping_cartesian_feasibility_service_name: check_cartesian_pose_feasibility
+    navigation_frame: map
+    arm_base_frame: base_link
+    mobile_recheck_mode: arm_only_plan
+    use_costmap_validation: false
+    costmap_topic: /global_costmap/costmap
+    costmap_occupied_threshold: 253
+    candidate_standoff_distances: [0.55, 0.70, 0.85]
+    candidate_angle_offsets_deg: [0.0, 30.0, -30.0]
