@@ -10,6 +10,9 @@
 - [x] Build validation through `mobile_manipulator_capabilities` now passes against the pluginized runtime.
 - [x] `grasping_omron_moma` now owns the standalone Omron launch wrappers for grasping bringup, task feasibility, and the mobile-manipulator test client.
 - [x] `moma_control` has been removed after moving its wrapper launch and config into `grasping_omron_moma`.
+- [x] Shared MoveIt request building is now extracted so execution and feasibility reuse the same request-shaping helpers.
+- [x] `workspace_creation_node.py` is now thinner and delegates workspace document loading, persistence, and save-path normalization to the shared scene-management core.
+- [x] `mobile_manipulator_server` now centralizes fallback and failure-result mapping instead of open-coding those semantics across handlers.
 - [ ] Planner-level and robot-level end-to-end validation still needs to be re-run after the latest refactor, including the new scene-management runtime.
 - [ ] Old documentation still needs final alignment with the pluginized package split and latest scene-management runtime.
 
@@ -33,7 +36,7 @@
 
 - [x] Add a dedicated grasping-side scene manager runtime node in Python.
 - [x] Refactor shared workspace parsing and scene-application logic out of `motion_execution_node.py` and `workspace_creation_node.py` into common utilities.
-- [ ] Keep `workspace_creation_node.py` as a calibration/editor frontend with an interactive calibration loop over the shared scene-management core.
+- [x] Keep `workspace_creation_node.py` as a calibration/editor frontend with an interactive calibration loop over the shared scene-management core.
 - [x] Make the scene manager the single runtime authority for active workspace scene state.
 - [x] Define a singleton global active-scene lifecycle for the single-robot case.
 - [x] Serialize scene-activation requests so only one scene change can run at a time.
@@ -97,7 +100,7 @@
 - [x] Add a dedicated rclcpp or rclpy feasibility node in the grasping stack.
 - [x] Reuse existing transform, workspace-area, IK, planning-scene, and planning logic from `motion_execution_node` where possible.
 - [x] Reuse state-validity logic patterns from `workspace_creation_node` where possible.
-- [ ] Avoid duplicating MoveIt request-building logic across execution and feasibility paths; extract helpers if needed.
+- [x] Avoid duplicating MoveIt request-building logic across execution and feasibility paths; extract helpers if needed.
 - [x] Add ROS parameters for service names, planning group, end effector link, planning frame, and timeouts.
 
 ## 4. Cartesian feasibility behavior in grasping
