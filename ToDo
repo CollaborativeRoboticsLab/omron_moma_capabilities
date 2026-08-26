@@ -10,8 +10,8 @@
 - [x] Build validation through `mobile_manipulator_capabilities` now passes against the pluginized runtime.
 - [x] `grasping_omron_moma` now owns the standalone Omron launch wrappers for grasping bringup, task feasibility, and the mobile-manipulator test client.
 - [x] `moma_control` has been removed after moving its wrapper launch and config into `grasping_omron_moma`.
-- [ ] Planner-level and robot-level end-to-end validation still needs to be re-run after the latest refactor.
-- [ ] Old documentation still needs to be aligned with the pluginized package split.
+- [ ] Planner-level and robot-level end-to-end validation still needs to be re-run after the latest refactor, including the new scene-management runtime.
+- [ ] Old documentation still needs final alignment with the pluginized package split and latest scene-management runtime.
 
 ## 1. Freeze package boundaries
 
@@ -24,7 +24,60 @@
 - [x] Keep any future new plugins in the `mobile_manipulator` stack, not in `omron_moma_capabilities`.
 - [x] Decide `mobile_manipulator` is now a split of message, base interface, plugin, and ROS runtime packages while `mobile_manipulator_capabilities` remains the runner package.
 - [x] Keep standalone Omron runtime wrappers in `grasping_omron_moma` so the Omron stack still works when capabilities packages are absent.
-- [ ] Document the ownership boundary in the README files of `grasping`, `mobile_manipulator`, `mobile_manipulator_capabilities`, and `omron_moma_capabilities`.
+- [x] Keep active planning-scene ownership on the grasping side.
+- [x] Keep scene-registry ownership on the mobile-manipulator side.
+- [x] Keep task feasibility and execution in `mobile_manipulator_ros`, separate from scene activation.
+- [x] Document the ownership boundary in the README files of `grasping`, `mobile_manipulator`, `mobile_manipulator_capabilities`, and `omron_moma_capabilities`.
+
+## 1a. Introduce scene-management split
+
+- [x] Add a dedicated grasping-side scene manager runtime node in Python.
+- [x] Refactor shared workspace parsing and scene-application logic out of `motion_execution_node.py` and `workspace_creation_node.py` into common utilities.
+- [ ] Keep `workspace_creation_node.py` as a calibration/editor frontend with an interactive calibration loop over the shared scene-management core.
+- [x] Make the scene manager the single runtime authority for active workspace scene state.
+- [x] Define a singleton global active-scene lifecycle for the single-robot case.
+- [x] Serialize scene-activation requests so only one scene change can run at a time.
+
+## 1b. Define grasping-side scene-manager responsibilities
+
+- [x] Parse `workspace.yaml` documents in the scene manager rather than in arm execution nodes.
+- [x] Convert workspace objects into MoveIt collision objects in the scene manager.
+- [x] Apply allowed object-link collision pairs in the scene manager.
+- [x] Update the active workspace-area filter in the scene manager.
+- [x] Publish active scene metadata from the scene manager.
+- [x] Stop treating launch-loaded workspace ROS parameters as the long-term source of truth once the scene manager exists.
+- [x] Make `motion_execution_node.py` and `feasibility_service_node.py` consume the active scene from the scene manager rather than owning independent workspace state.
+
+## 1c. Define grasping-side scene-manager interfaces
+
+- [x] Add a `GetActiveScene` service.
+- [x] Add a `ValidateWorkspaceDocument` service.
+- [x] Add an `ActivateScene` action.
+- [x] Add a `LoadSceneFromContent` action.
+- [x] Do not add `ApplyScenePatch` in the first version.
+- [x] Return a `scene_handle` or `scene_revision`, not a planning pipeline id.
+- [x] Include active-scene metadata in activation results, such as scene name, scene handle, revision, workspace base frame, and object names.
+
+## 1d. Define mobile-manipulator scene registry and selection
+
+- [x] Add a mobile-manipulator-side scene registry/selector component that owns `scenes.yaml`.
+- [x] Resolve scene references by scene name on the mobile-manipulator side.
+- [x] Keep `workspace.yaml` parsing on the grasping side only.
+- [x] Add a `ListAvailableScenes` ROS API on the mobile-manipulator side.
+- [x] Add an `ActivateSceneByName` ROS API on the mobile-manipulator side.
+- [x] Make the mobile-manipulator side a client of the grasping scene-manager activation API.
+- [x] Return the activated `scene_handle` back to callers so downstream capabilities can reference the active scene.
+- [x] Support `scenes.yaml` entries that reference workspace files by package and relative path.
+- [x] Keep semantic scene descriptions and selection metadata in `scenes.yaml`.
+
+## 1e. Decide mobile-manipulator plugin boundaries for scene selection
+
+- [x] Add a `mobile_manipulator_scene_selector` plugin boundary for scene selection policy.
+- [x] Let the scene-selector plugin own scene selection policy, semantic matching, fallback selection rules, and external request handling by scene name or task context.
+- [x] Do not let the scene-selector plugin mutate the MoveIt planning scene directly.
+- [x] Do not let the scene-selector plugin parse `workspace.yaml` directly.
+- [x] Host the scene-selector plugin inside a mobile-manipulator scene-registry node rather than making the plugin itself the entire system-facing runtime.
+- [x] Decide whether the first version needs only one built-in selector policy before adding multiple selector plugins.
 
 ## 2. Define grasping feasibility service contracts
 
@@ -68,8 +121,8 @@
 
 ## 6. Add tests for grasping feasibility
 
-- [ ] Unit test request validation and mode parsing.
-- [ ] Unit test workspace-area rejection logic.
+- [x] Unit test request validation and mode parsing.
+- [x] Unit test workspace-area rejection logic.
 - [ ] Unit test response mapping from MoveIt error codes to `failure_reason` and `message`.
 - [ ] Add integration tests or launch tests for successful IK, failed IK, valid joint state, and invalid joint state.
 - [ ] Add CLI examples to docs for calling both feasibility services.
@@ -141,9 +194,9 @@
 
 ## 13. Documentation and examples
 
-- [ ] Update grasping docs to describe both feasibility services and how they differ from execution actions.
-- [ ] Document that IK success is not the same as planning success.
-- [ ] Update `mobile_manipulator` README with the final split across `mobile_manipulator_msgs`, `mobile_manipulator_base`, `mobile_manipulator_ros`, and plugin packages.
+- [x] Update grasping docs to describe both feasibility services and how they differ from execution actions.
+- [x] Document that IK success is not the same as planning success.
+- [x] Update `mobile_manipulator` README with the final split across `mobile_manipulator_msgs`, `mobile_manipulator_base`, `mobile_manipulator_ros`, and plugin packages.
 - [x] Update `mobile_manipulator_capabilities` README with the fallback policy flow.
 - [x] Update `omron_moma_capabilities` docs with Omron-specific base reasoning and launch instructions.
 - [x] Update `grasping_omron_moma` README with standalone Omron task-feasibility, test-client, and composed bringup launches.
