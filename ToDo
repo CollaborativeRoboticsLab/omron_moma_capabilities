@@ -1,226 +1,36 @@
-# Mobile Manipulator Feasibility and Fallback Implementation ToDo
+# Mobile Manipulator Remaining Work
 
-## Current status snapshot
+## 1. Validation First
 
-- [x] Public ROS contracts are split into `mobile_manipulator_msgs`.
-- [x] Shared interfaces and types are split into `mobile_manipulator_base`.
-- [x] Runtime ROS interfaces are consolidated into `mobile_manipulator_ros`.
-- [x] Validator, generator, selector, and coordinator are real plugin packages loaded by the server.
-- [x] `mobile_manipulator_capabilities` is now a thin adapter layer over the ROS services and action.
-- [x] Build validation through `mobile_manipulator_capabilities` now passes against the pluginized runtime.
-- [x] `grasping_omron_moma` now owns the standalone Omron launch wrappers for grasping bringup, task feasibility, and the mobile-manipulator test client.
-- [x] `moma_control` has been removed after moving its wrapper launch and config into `grasping_omron_moma`.
-- [x] Shared MoveIt request building is now extracted so execution and feasibility reuse the same request-shaping helpers.
-- [x] `workspace_creation_node.py` is now thinner and delegates workspace document loading, persistence, and save-path normalization to the shared scene-management core.
-- [x] `mobile_manipulator_server` now centralizes fallback and failure-result mapping instead of open-coding those semantics across handlers.
-- [ ] Planner-level and robot-level end-to-end validation still needs to be re-run after the latest refactor, including the new scene-management runtime.
-- [ ] Old documentation still needs final alignment with the pluginized package split and latest scene-management runtime.
-
-## 1. Freeze package boundaries
-
-- [x] Keep arm-only feasibility and arm execution in the grasping stack.
-- [x] Keep generic arm-plus-base reasoning in `mobile_manipulator`.
-- [x] Keep mobile-manipulator feasibility capabilities in `mobile_manipulator_capabilities`.
-- [x] Move generic contracts into `mobile_manipulator_msgs`, `mobile_manipulator_base`, and `mobile_manipulator_ros`.
-- [x] Make validator, generator, selector, and coordinator package-owned plugins instead of hardcoded server classes.
-- [x] Keep Omron customization parameter-based for now rather than creating Omron-specific plugins.
-- [x] Keep any future new plugins in the `mobile_manipulator` stack, not in `omron_moma_capabilities`.
-- [x] Decide `mobile_manipulator` is now a split of message, base interface, plugin, and ROS runtime packages while `mobile_manipulator_capabilities` remains the runner package.
-- [x] Keep standalone Omron runtime wrappers in `grasping_omron_moma` so the Omron stack still works when capabilities packages are absent.
-- [x] Keep active planning-scene ownership on the grasping side.
-- [x] Keep scene-registry ownership on the mobile-manipulator side.
-- [x] Keep task feasibility and execution in `mobile_manipulator_ros`, separate from scene activation.
-- [x] Document the ownership boundary in the README files of `grasping`, `mobile_manipulator`, `mobile_manipulator_capabilities`, and `omron_moma_capabilities`.
-
-## 1a. Introduce scene-management split
-
-- [x] Add a dedicated grasping-side scene manager runtime node in Python.
-- [x] Refactor shared workspace parsing and scene-application logic out of `motion_execution_node.py` and `workspace_creation_node.py` into common utilities.
-- [x] Keep `workspace_creation_node.py` as a calibration/editor frontend with an interactive calibration loop over the shared scene-management core.
-- [x] Make the scene manager the single runtime authority for active workspace scene state.
-- [x] Define a singleton global active-scene lifecycle for the single-robot case.
-- [x] Serialize scene-activation requests so only one scene change can run at a time.
-
-## 1b. Define grasping-side scene-manager responsibilities
-
-- [x] Parse `workspace.yaml` documents in the scene manager rather than in arm execution nodes.
-- [x] Convert workspace objects into MoveIt collision objects in the scene manager.
-- [x] Apply allowed object-link collision pairs in the scene manager.
-- [x] Update the active workspace-area filter in the scene manager.
-- [x] Publish active scene metadata from the scene manager.
-- [x] Stop treating launch-loaded workspace ROS parameters as the long-term source of truth once the scene manager exists.
-- [x] Make `motion_execution_node.py` and `feasibility_service_node.py` consume the active scene from the scene manager rather than owning independent workspace state.
-
-## 1c. Define grasping-side scene-manager interfaces
-
-- [x] Add a `GetActiveScene` service.
-- [x] Add a `ValidateWorkspaceDocument` service.
-- [x] Add an `ActivateScene` action.
-- [x] Add a `LoadSceneFromContent` action.
-- [x] Do not add `ApplyScenePatch` in the first version.
-- [x] Return a `scene_handle` or `scene_revision`, not a planning pipeline id.
-- [x] Include active-scene metadata in activation results, such as scene name, scene handle, revision, workspace base frame, and object names.
-
-## 1d. Define mobile-manipulator scene registry and selection
-
-- [x] Add a mobile-manipulator-side scene registry/selector component that owns `scenes.yaml`.
-- [x] Resolve scene references by scene name on the mobile-manipulator side.
-- [x] Keep `workspace.yaml` parsing on the grasping side only.
-- [x] Add a `ListAvailableScenes` ROS API on the mobile-manipulator side.
-- [x] Add an `ActivateSceneByName` ROS API on the mobile-manipulator side.
-- [x] Make the mobile-manipulator side a client of the grasping scene-manager activation API.
-- [x] Return the activated `scene_handle` back to callers so downstream capabilities can reference the active scene.
-- [x] Support `scenes.yaml` entries that reference workspace files by package and relative path.
-- [x] Keep semantic scene descriptions and selection metadata in `scenes.yaml`.
-
-## 1e. Decide mobile-manipulator plugin boundaries for scene selection
-
-- [x] Add a `mobile_manipulator_scene_selector` plugin boundary for scene selection policy.
-- [x] Let the scene-selector plugin own scene selection policy, semantic matching, fallback selection rules, and external request handling by scene name or task context.
-- [x] Do not let the scene-selector plugin mutate the MoveIt planning scene directly.
-- [x] Do not let the scene-selector plugin parse `workspace.yaml` directly.
-- [x] Host the scene-selector plugin inside a mobile-manipulator scene-registry node rather than making the plugin itself the entire system-facing runtime.
-- [x] Decide whether the first version needs only one built-in selector policy before adding multiple selector plugins.
-
-## 2. Define grasping feasibility service contracts
-
-- [x] Add a Cartesian feasibility service in the grasping stack.
-- [x] Request fields: `geometry_msgs/Pose pose`, `string frame_id`, `string mode`.
-- [x] Supported Cartesian modes: `arm_only_ik`, `arm_only_plan`.
-- [x] Add a joint feasibility service in the grasping stack.
-- [x] Request fields: `string[] joint_names`, `float64[] joint_positions`, `string mode`.
-- [x] Supported joint modes: `state_validity`, `plan`.
-- [x] Standardize response fields for both services.
-- [x] Response fields should include at least `bool feasible`, `string mode_used`, `string failure_reason`, `string suggested_fallback`, `string message`.
-- [x] Decide whether to include optional resolved outputs in the response such as transformed target pose, IK joint solution, and planning frame.
-- [x] Decide whether to return contact information or collision object names when feasibility fails because of the scene.
-
-## 3. Implement grasping feasibility services
-
-- [x] Add a dedicated rclcpp or rclpy feasibility node in the grasping stack.
-- [x] Reuse existing transform, workspace-area, IK, planning-scene, and planning logic from `motion_execution_node` where possible.
-- [x] Reuse state-validity logic patterns from `workspace_creation_node` where possible.
-- [x] Avoid duplicating MoveIt request-building logic across execution and feasibility paths; extract helpers if needed.
-- [x] Add ROS parameters for service names, planning group, end effector link, planning frame, and timeouts.
-
-## 4. Cartesian feasibility behavior in grasping
-
-- [x] Validate that `frame_id` is present and transformable into the planning frame.
-- [x] Reject targets outside the configured workspace area before MoveIt calls.
-- [x] For `arm_only_ik`, seed IK with the current planning joint state and set collision avoidance on.
-- [x] Return `feasible=true` only when the IK request succeeds.
-- [x] Populate `failure_reason` for transform failure, stale joint state, IK failure, and workspace-area rejection.
-- [x] For `arm_only_plan`, first compute a valid target joint state or pose target, then run a planning-only check without execution.
-- [x] Decide whether `arm_only_plan` should prefer a joint-goal request from IK or allow pose-constrained fallback planning.
-- [x] If arm-only planning fails but a base move could help, set `suggested_fallback=move_base_then_arm`.
-
-## 5. Joint feasibility behavior in grasping
-
-- [x] Validate that `joint_names` is non-empty.
-- [x] Validate that `joint_names` and `joint_positions` have matching lengths.
-- [x] For `state_validity`, call MoveIt state validity against the current planning scene.
-- [x] For `plan`, build a planning-only joint-goal request from the current state to the requested state.
-- [x] Return structured failure reasons for invalid request shape, missing joints, collision, constraint violation, and planner failure.
-
-## 6. Add tests for grasping feasibility
-
-- [x] Unit test request validation and mode parsing.
-- [x] Unit test workspace-area rejection logic.
-- [ ] Unit test response mapping from MoveIt error codes to `failure_reason` and `message`.
-- [ ] Add integration tests or launch tests for successful IK, failed IK, valid joint state, and invalid joint state.
-- [ ] Add CLI examples to docs for calling both feasibility services.
-
-## 7. Define mobile manipulator service contracts
-
-- [x] Create a dedicated `mobile_manipulator_msgs` package to own shared messages, services, and actions.
-- [x] Add a task feasibility service for mobile manipulator reasoning.
-- [x] Request fields: `geometry_msgs/Pose pose`, `string frame_id`, `string mode`.
-- [x] Supported task modes: `arm_only_ik`, `arm_only_plan`, `mobile_manipulator`.
-- [x] Standardize response fields with grasping feasibility responses.
-- [x] Add optional mobile-manipulator-specific response fields such as candidate base pose, candidate score, projected base frame, and next recommended action.
-- [x] Add `FindFeasiblePose.srv` for generated candidate search.
-- [x] Redesign `ExecuteTaskPose.action` to require a validated solution and optional approved base pose.
-
-## 8. Implement generic mobile manipulator feasibility node
-
-- [x] Create a new rclcpp node in `mobile_manipulator_ros` dedicated to orchestration.
-- [x] For `arm_only_ik` and `arm_only_plan`, forward directly to the grasping Cartesian feasibility service.
-- [x] For `mobile_manipulator`, first call arm-only feasibility.
-- [x] If arm-only feasibility succeeds, return success immediately without base reasoning.
-- [x] If arm-only feasibility fails, request or compute candidate base poses.
-- [x] Re-check grasping feasibility for each candidate base pose.
-- [x] Return the selected feasible base pose with `suggested_fallback=move_base_then_arm`.
-- [x] Move candidate scoring and selection policy into a dedicated selector plugin.
-- [x] Load validator, generator, selector, and coordinator through pluginlib and parameters.
-- [x] Use class-keyed parameter blocks like `GraspingPoseValidator.*` and `DefaultCoordinator.*`.
-- [ ] Define whether current least-movement scoring is final or just the initial default policy.
-- [ ] Define how many candidates to evaluate and whether generator pruning/early-stop should be configurable.
-
-## 9. Define Omron-specific base reasoning responsibilities
-
-- [x] Decide the generic base-pose generator belongs in `mobile_manipulator_pose_generator`.
-- [x] Implement default base-pose candidate generation relative to the target pose.
-- [ ] Decide the projection frame for target-driven base reasoning: likely `map` for navigation and `base_link` for arm-relative reach checks. but if the target (workspace) is defined in world coordinates, the adapter may need to transform it into the map frame first.
-- [x] Define default stand-off distance, orientation heuristics, and side-approach policy in the generator plugin.
-- [ ] Account for the actual footprint and safety offsets of the LD base.
-- [x] Add optional costmap validation in the validator plugin.
-- [x] Define how the chosen base target pose is returned through feasibility and execution APIs.
-- [x] Treat the current generic validator/generator/selector/coordinator plugins as the default Omron path, customized by parameters only.
-- [ ] Revisit new plugin implementations only if robot behavior shows that parameters are insufficient, and add them under the `mobile_manipulator` stack.
-
-## 10. Integrate generic node with Omron adapter
-
-- [x] Add a plugin boundary between generic mobile-manipulator orchestration and concrete validator/generator/selector/coordinator behavior.
-- [x] Avoid hard-coding Omron frame names or Nav2 topics in the generic layer.
-- [x] Make Omron-specific values parameter-driven where possible.
-- [x] Add launch files that start the single `mobile_manipulator_server` runtime alongside grasping and Nav2.
-- [x] Add standalone Omron wrapper launches in `grasping_omron_moma` for `task_feasibility`, `mobile_manipulator_control`, and a one-command combined bringup.
-- [ ] Ensure the Humble and Jazzy devcontainer/workspace setup includes the new repos and packages as needed.
-
-## 11. Add capability interfaces and providers
-
-- [x] Keep `moveit2_capabilities` focused on arm-only feasibility and arm execution.
-- [x] Add a `CheckCartesianFeasibilityRunner` provider that calls the grasping Cartesian feasibility service.
-- [x] Add a `CheckJointFeasibilityRunner` provider that calls the grasping joint feasibility service.
-- [x] Add provider YAMLs with configuration parameters and runtime outputs for feasibility results.
-- [x] Create `mobile_manipulator_capabilities` runners for task-feasibility queries.
-- [x] Create explicit thin runners for `CheckTaskFeasibility`, `FindFeasiblePose`, and `ExecuteTaskPose`.
-- [x] Split feasibility/search from execution instead of embedding all fallback behavior in a single thick runner.
-- [x] Rebuild and validate `mobile_manipulator_capabilities` against the final pluginized runtime.
-
-## 12. Define LLM-facing policy outputs
-
-- [x] Standardize machine-readable `failure_reason` values.
-- [x] Standardize machine-readable `suggested_fallback` values.
-- [x] Ensure responses are easy for an LLM or planner to branch on without parsing free text.
-- [ ] Add examples showing how Fabric or higher-level planners should interpret feasibility responses.
-
-## 13. Documentation and examples
-
-- [x] Update grasping docs to describe both feasibility services and how they differ from execution actions.
-- [x] Document that IK success is not the same as planning success.
-- [x] Update `mobile_manipulator` README with the final split across `mobile_manipulator_msgs`, `mobile_manipulator_base`, `mobile_manipulator_ros`, and plugin packages.
-- [x] Update `mobile_manipulator_capabilities` README with the fallback policy flow.
-- [x] Update `omron_moma_capabilities` docs with Omron-specific base reasoning and launch instructions.
-- [x] Update `grasping_omron_moma` README with standalone Omron task-feasibility, test-client, and composed bringup launches.
-- [ ] Add sequence diagrams for arm-only success and base-plus-arm fallback.
-
-## 14. Validation milestones
-
+- [ ] Re-run planner-level and robot-level end-to-end validation after the latest refactor, including the new scene-management runtime.
 - [ ] Milestone 1: Cartesian arm-only IK feasibility works against the current scene.
 - [ ] Milestone 2: Cartesian arm-only planning feasibility works without execution.
 - [ ] Milestone 3: Joint state validity and planning feasibility both work.
 - [ ] Milestone 4: `FindFeasiblePose` returns a valid base candidate when arm-only feasibility fails.
 - [ ] Milestone 5: `ExecuteTaskPose` performs approved base move plus arm execution end-to-end on Omron.
 - [ ] Milestone 6: Capability runners expose the final service/action policy cleanly to the higher-level planner.
+- [ ] Validate the complete fallback loop on the robot or representative simulation.
 
-## 15. Suggested implementation order
+## 2. Test Gaps
 
-- [x] First, define the `.srv` contracts and freeze response fields.
-- [x] Second, implement the grasping feasibility node and test it directly.
-- [x] Third, add arm-only feasibility runners in `moveit2_capabilities`.
-- [x] Fourth, create the shared `mobile_manipulator_msgs` and `mobile_manipulator_base` packages.
-- [x] Fifth, implement the generic `mobile_manipulator_ros` runtime node.
-- [x] Sixth, split validation, generation, selection, and coordination behind plugin packages.
-- [x] Seventh, add the mobile-manipulator capability runners over the new service/action contracts.
-- [ ] Eighth, validate the complete fallback loop on the robot or representative simulation.
+- [ ] Add a unit test for response mapping from MoveIt error codes to `failure_reason` and `message`.
+- [ ] Add integration or launch coverage for successful IK, failed IK, valid joint state, and invalid joint state.
+
+## 3. Runtime Policy Decisions
+
+- [ ] Decide whether the current least-movement scoring is the final policy or only the initial default.
+- [ ] Define how many candidates to evaluate and whether generator pruning or early-stop should be configurable.
+- [ ] Decide the projection frame for target-driven base reasoning, especially when the workspace target is defined in world coordinates but navigation runs in `map`.
+- [ ] Account for the actual LD base footprint and safety offsets in the default mobile-manipulator reasoning.
+- [ ] Revisit whether new plugins are needed only if parameter-based tuning proves insufficient.
+
+## 4. Environment and Bringup
+
+- [x] Ensure the Humble and Jazzy devcontainer or workspace setup includes the new repos and packages as needed.
+
+## 5. Planner-Facing Documentation
+
+- [x] Align older documentation with the pluginized package split and the latest scene-management runtime.
+- [x] Add CLI examples for calling both grasping feasibility services.
+- [x] Add examples showing how Fabric or higher-level planners should interpret feasibility responses.
+- [x] Add sequence diagrams for arm-only success and base-plus-arm fallback.
