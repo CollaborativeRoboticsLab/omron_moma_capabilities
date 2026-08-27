@@ -11,26 +11,10 @@
 - [ ] Milestone 6: Capability runners expose the final service/action policy cleanly to the higher-level planner.
 - [ ] Validate the complete fallback loop on the robot or representative simulation.
 
-## 2. Test Gaps
-
-- [x] Add a unit test for response mapping from MoveIt error codes to `failure_reason` and `message`.
-- [x] Add integration or launch coverage for successful IK, failed IK, valid joint state, and invalid joint state.
-
-## 3. Runtime Policy Decisions
+## 2. Runtime Policy Decisions
 
 - [ ] Decide whether the current least-movement scoring is the final policy or only the initial default.
 - [ ] Define how many candidates to evaluate and whether generator pruning or early-stop should be configurable.
 - [ ] Decide the projection frame for target-driven base reasoning, especially when the workspace target is defined in world coordinates but navigation runs in `map`.
 - [ ] Account for the actual LD base footprint and safety offsets in the default mobile-manipulator reasoning.
 - [ ] Revisit whether new plugins are needed only if parameter-based tuning proves insufficient.
-
-## 4. Environment and Bringup
-
-- [x] Ensure the Humble and Jazzy devcontainer or workspace setup includes the new repos and packages as needed.
-
-## 5. Planner-Facing Documentation
-
-- [x] Align older documentation with the pluginized package split and the latest scene-management runtime.
-- [x] Add CLI examples for calling both grasping feasibility services.
-- [x] Add examples showing how Fabric or higher-level planners should interpret feasibility responses.
-- [x] Add sequence diagrams for arm-only success and base-plus-arm fallback.

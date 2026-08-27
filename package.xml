@@ -3,16 +3,19 @@
 <package format="3">
   <name>omron_moma_capabilities</name>
   <version>0.1.0</version>
-  <description>Omron-specific mobile-manipulator feasibility adapter built on top of grasping feasibility services.</description>
+  <description>Standalone Omron MOMA capability plans and launch wrappers for separate Nav2, grasping, and gripper testing.</description>
   <maintainer email="kalanaratnayake95@gmail.com">ubuntu</maintainer>
   <license>MIT</license>
 
   <buildtool_depend>ament_cmake</buildtool_depend>
 
+  <exec_depend>ament_index_python</exec_depend>
   <depend>launch</depend>
   <depend>launch_ros</depend>
-  <depend>mobile_manipulator</depend>
-  <depend>yaml_cpp_vendor</depend>
+  <exec_depend>fabric_server</exec_depend>
+  <exec_depend>grasping_capabilities</exec_depend>
+  <exec_depend>gripper_capabilities</exec_depend>
+  <exec_depend>nav2_capabilities</exec_depend>
 
   <test_depend>ament_lint_auto</test_depend>
   <test_depend>ament_lint_common</test_depend>

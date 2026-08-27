@@ -88,7 +88,7 @@ RUN git clone --recurse-submodules https://github.com/CollaborativeRoboticsLab/o
 RUN git clone https://github.com/CollaborativeRoboticsLab/omron_moma.git
 # RUN git clone https://github.com/CollaborativeRoboticsLab/mobile_manipulator.git
 # RUN git clone https://github.com/CollaborativeRoboticsLab/mobile_manipulator_capabilities.git
-# RUN git clone https://github.com/CollaborativeRoboticsLab/moveit2_capabilities.git -b experience-integration
+# RUN git clone https://github.com/CollaborativeRoboticsLab/grasping_capabilities.git -b experience-integration
 # RUN git clone https://github.com/CollaborativeRoboticsLab/gripper_capabilities.git -b experience-integration
 # RUN git clone https://github.com/CollaborativeRoboticsLab/grasping_omron_moma.git
 # RUN git clone https://github.com/CollaborativeRoboticsLab/supervisor.git
