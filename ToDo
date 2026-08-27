@@ -13,8 +13,8 @@
 
 ## 2. Test Gaps
 
-- [ ] Add a unit test for response mapping from MoveIt error codes to `failure_reason` and `message`.
-- [ ] Add integration or launch coverage for successful IK, failed IK, valid joint state, and invalid joint state.
+- [x] Add a unit test for response mapping from MoveIt error codes to `failure_reason` and `message`.
+- [x] Add integration or launch coverage for successful IK, failed IK, valid joint state, and invalid joint state.
 
 ## 3. Runtime Policy Decisions
 
