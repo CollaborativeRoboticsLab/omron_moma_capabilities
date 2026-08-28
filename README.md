@@ -1,42 +1,31 @@
-# omron_moma_capabilities
+# Omron Mobile Manipulator Capabilities
 
-Omron-specific capability plans and launch wrappers for standalone stack testing.
+Omron MoMa specific capability plans and launch wrappers.
 
 ## Purpose
 
-This package currently packages example plans for the Omron MOMA setup without inheriting from `mobile_manipulator` or `mobile_manipulator_capabilities`.
+This package currently contains generative and non-generative execution plans for the Omron MOMA setup. It does not inherit from `mobile_manipulator` and assumes the robot is capable of using nav2 and moveit independently. 
 
-The current goal is to validate the lower-level stacks separately:
+The current plans utilize and builds on top of following capability packages:
 
-- `nav2_capabilities` plans for base-only navigation
-- `grasping_capabilities` plans for arm-only MoveIt and grasping actions
-- `gripper_capabilities` plans for isolated gripper command testing
+- [nav2_capabilities](https://github.com/CollaborativeRoboticsLab/nav2_capabilities) plans for base-only navigation
+- [grasping_capabilities](https://github.com/CollaborativeRoboticsLab/grasping_capabilities) plans for arm-only MoveIt and grasping actions
+- [gripper_capabilities](https://github.com/CollaborativeRoboticsLab/gripper_capabilities) plans for isolated gripper command testing
 
 ## Ownership Boundary
 
-- `grasping` owns active scene management, MoveIt planning-scene updates, arm-only feasibility, and arm execution
-- `nav2` owns base-only waypoint execution
-- `gripper` owns isolated gripper command execution
-- `omron_moma_capabilities` owns Omron-facing example plans plus simple launch wrappers for separate stack testing
-
-For now this package intentionally does not compose the generic mobile-manipulator stack. It is a thin plan-and-launch package for validating the individual capability packages in isolation.
+- [grasping](https://github.com/CollaborativeRoboticsLab/grasping) owns active scene management, MoveIt planning-scene updates, arm-only feasibility, and arm execution.
+- [gripper](https://github.com/CollaborativeRoboticsLab/grippers) owns isolated gripper command execution.
+- [omron_moma](https://github.com/CollaborativeRoboticsLab/omron_moma) owns Omron MoMa specific Nav2 and MoveIt2 configuration and launch files.
 
 ## Plan Groups
 
 | Group | Plans | Purpose |
 | --- | --- | --- |
-| Grasping | `moma_grasp_1.xml` to `moma_grasp_4.xml` | Cartesian, joint-space, and named-pose arm motion through `grasping_capabilities`. |
-| Nav2 | `moma_nav2_1.xml`, `moma_nav2_2.xml` | Base-only waypoint navigation through `nav2_capabilities`. |
-| Gripper | `moma_gripper_1.xml`, `moma_gripper_2.xml` | Standalone gripper open/close tests through `gripper_capabilities`. |
-
-Default standalone plans are recorded in [config/standalone_test_config.json](./config/standalone_test_config.json).
-
-## Launch Files
-
-- `system.launch.py`: generic wrapper that runs any plan in this package through `fabric_server`
-- `grasping.launch.py`: defaults to `moma_grasp_1.xml`
-- `nav2.launch.py`: defaults to `moma_nav2_1.xml`
-- `gripper.launch.py`: defaults to `moma_gripper_1.xml`
+| Grasping | `moma_grasp_1.xml` to `moma_grasp_4.xml` | Cartesian, joint-space, and named-pose arm motion through `grasping_capabilities`. Uses non-generative execution plans. |
+| Nav2 | `moma_nav2_1.xml`, `moma_nav2_2.xml` | Base-only waypoint navigation through `nav2_capabilities`. Uses non-generative execution plans. |
+| Gripper | `moma_gripper_1.xml`, `moma_gripper_2.xml` | Standalone gripper open/close tests through `gripper_capabilities`. Uses non-generative execution plans. |
+| Generative | `moma_generative_1.xml` to `moma_generative_2.xml` | Example generative execution plan for the Omron MoMa setup around both navigation and manipulation. Uses generative execution plans. |
 
 ## Build
 
@@ -47,9 +36,7 @@ colcon build --packages-up-to omron_moma_capabilities --symlink-install
 
 ## Runtime
 
-Start the capabilities server and whichever underlying runtime stack you want to test, then launch the matching plan wrapper.
-
-Grasping example:
+Start the capabilities2 stack
 
 ```bash
 source install/setup.bash
