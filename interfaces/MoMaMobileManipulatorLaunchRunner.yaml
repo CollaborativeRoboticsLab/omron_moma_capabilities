@@ -1,0 +1,11 @@
+%YAML 1.1
+---
+name: MoMaMobileManipulatorLaunchRunner
+spec_type: interface
+spec_version: 1.2
+description: "Starts the mobile-manipulator coordinator for the already managed Omron MoMa stack."
+interface:
+  services:
+    "/check_task_feasibility":
+      type: "mobile_manipulator_msgs::srv::CheckTaskFeasibility"
+      description: "Coordinator readiness service for task feasibility checks."

@@ -1,0 +1,24 @@
+%YAML 1.1
+---
+name: MoMaNav2LaunchRunner
+spec_type: provider
+spec_version: 1.2
+description: "Launches the Omron MoMa LD250 base, TM arm, MoveIt, and the robot-configured Nav2 stack."
+implements: nav2_capabilities/Nav2LaunchRunner
+runner: moma_ros/ld250_tm12x.launch.py
+definition:
+  launch_parameters:
+    - key: use_rviz
+      value: "false"
+    - key: use_moveit
+      value: "true"
+    - key: use_nav2
+      value: "true"
+  launch_readiness:
+    lifecycle:
+      nodes: [planner_server, bt_navigator]
+      timeout_sec: 90.0
+    action:
+      name: navigate_to_pose
+      type: nav2_msgs/action/NavigateToPose
+      timeout: 90.0

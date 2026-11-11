@@ -1,0 +1,13 @@
+%YAML 1.1
+---
+name: MoMaMoveToJointPoseRunner
+spec_type: provider
+spec_version: 1.2
+description: "Omron MoMa joint-space arm motion using the shared robot stack."
+implements: omron_moma_capabilities/MoMaMoveToJointPoseRunner
+runner: capabilities2_runner::MoveToJointPoseRunner
+depends_on:
+  "grasping_capabilities/GraspingLaunchRunner":
+    provider: "omron_moma_capabilities/MoMaGraspingLaunchRunner"
+definition:
+  command: "<Runner interface=omron_moma_capabilities/MoMaMoveToJointPoseRunner provider=omron_moma_capabilities/MoMaMoveToJointPoseRunner joint_names='$joint_names' joint_positions='$joint_positions' />"

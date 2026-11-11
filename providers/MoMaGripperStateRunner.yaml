@@ -1,0 +1,20 @@
+%YAML 1.1
+---
+name: MoMaGripperStateRunner
+spec_type: provider
+spec_version: 1.2
+description: "Omron MoMa soft two-finger gripper state provider."
+implements: omron_moma_capabilities/MoMaGripperStateRunner
+runner: capabilities2_runner::GripperStateRunner
+depends_on:
+  "gripper_capabilities/GripperLaunchRunner":
+    provider: "gripper_capabilities/GripperLaunchRunner"
+definition:
+  command: "<Runner interface=omron_moma_capabilities/MoMaGripperStateRunner provider=omron_moma_capabilities/MoMaGripperStateRunner timeout_sec='$timeout_sec' />"
+  configuration_parameters:
+    - name: timeout_sec
+      type: double
+      optional: true
+      default: 2.0
+      semantic_key: gripper.state.timeout
+      description: "Maximum time to wait for a gripper state sample."

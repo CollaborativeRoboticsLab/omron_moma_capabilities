@@ -1,0 +1,13 @@
+%YAML 1.1
+---
+name: MoMaMoveToCartesianPoseRunner
+spec_type: provider
+spec_version: 1.2
+description: "Omron MoMa Cartesian arm motion using the shared robot stack."
+implements: omron_moma_capabilities/MoMaMoveToCartesianPoseRunner
+runner: capabilities2_runner::MoveToCartesianPoseRunner
+depends_on:
+  "grasping_capabilities/GraspingLaunchRunner":
+    provider: "omron_moma_capabilities/MoMaGraspingLaunchRunner"
+definition:
+  command: "<Runner interface=omron_moma_capabilities/MoMaMoveToCartesianPoseRunner provider=omron_moma_capabilities/MoMaMoveToCartesianPoseRunner x='$x' y='$y' z='$z' qx='$qx' qy='$qy' qz='$qz' qw='$qw' target_frame='$target_frame' />"

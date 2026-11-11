@@ -7,11 +7,19 @@ endif()
 
 find_package(ament_cmake REQUIRED)
 
-install(DIRECTORY launch
+install(DIRECTORY launch config
+  DESTINATION share/${PROJECT_NAME}
+)
+
+install(DIRECTORY interfaces semantic_interfaces
   DESTINATION share/${PROJECT_NAME}
 )
 
 install(DIRECTORY plans
+  DESTINATION share/${PROJECT_NAME}
+)
+
+install(DIRECTORY providers
   DESTINATION share/${PROJECT_NAME}
 )
 

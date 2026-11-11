@@ -1,0 +1,7 @@
+%YAML 1.1
+---
+name: MoMaRobotposeRunner
+spec_type: semantic_interface
+spec_version: 1.2
+description: "Omron MoMa robot pose from the map, odom, and base_link transforms."
+redefines: nav2_capabilities/RobotPoseRunner

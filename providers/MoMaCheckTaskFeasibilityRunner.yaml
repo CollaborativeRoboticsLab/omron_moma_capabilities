@@ -1,0 +1,13 @@
+%YAML 1.1
+---
+name: MoMaCheckTaskFeasibilityRunner
+spec_type: provider
+spec_version: 1.2
+description: "Omron MoMa task-feasibility query using the shared coordinator runtime."
+implements: omron_moma_capabilities/MoMaCheckTaskFeasibilityRunner
+runner: capabilities2_runner::CheckTaskFeasibilityRunner
+depends_on:
+  "omron_moma_capabilities/MoMaMobileManipulatorLaunchRunner":
+    provider: "omron_moma_capabilities/MoMaMobileManipulatorLaunchRunner"
+definition:
+  command: "<Runner interface=omron_moma_capabilities/MoMaCheckTaskFeasibilityRunner provider=omron_moma_capabilities/MoMaCheckTaskFeasibilityRunner x='$x' y='$y' z='$z' qx='$qx' qy='$qy' qz='$qz' qw='$qw' frame_id='$frame_id' mode='$mode' base_pose_valid='$base_pose_valid' base_x='$base_x' base_y='$base_y' base_z='$base_z' base_qx='$base_qx' base_qy='$base_qy' base_qz='$base_qz' base_qw='$base_qw' base_frame_id='$base_frame_id' />"

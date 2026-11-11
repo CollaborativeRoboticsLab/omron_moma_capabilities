@@ -1,0 +1,7 @@
+%YAML 1.1
+---
+name: MoMaCheckTaskFeasibilityRunner
+spec_type: semantic_interface
+spec_version: 1.2
+description: "Checks task feasibility for the Omron MoMa arm and mobile base."
+redefines: mobile_manipulator_capabilities/CheckTaskFeasibilityRunner

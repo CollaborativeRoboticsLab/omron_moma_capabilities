@@ -1,0 +1,13 @@
+%YAML 1.1
+---
+name: MoMaExecuteTaskPoseRunner
+spec_type: provider
+spec_version: 1.2
+description: "Omron MoMa execution of a previously validated task pose and explicitly approved base pose."
+implements: omron_moma_capabilities/MoMaExecuteTaskPoseRunner
+runner: capabilities2_runner::ExecuteTaskPoseRunner
+depends_on:
+  "omron_moma_capabilities/MoMaMobileManipulatorLaunchRunner":
+    provider: "omron_moma_capabilities/MoMaMobileManipulatorLaunchRunner"
+definition:
+  command: "<Runner interface=omron_moma_capabilities/MoMaExecuteTaskPoseRunner provider=omron_moma_capabilities/MoMaExecuteTaskPoseRunner x='$x' y='$y' z='$z' qx='$qx' qy='$qy' qz='$qz' qw='$qw' frame_id='$frame_id' mode='$mode' validated='$validated' approved_base_pose_valid='$approved_base_pose_valid' approved_base_x='$approved_base_x' approved_base_y='$approved_base_y' approved_base_z='$approved_base_z' approved_base_qx='$approved_base_qx' approved_base_qy='$approved_base_qy' approved_base_qz='$approved_base_qz' approved_base_qw='$approved_base_qw' approved_base_frame='$approved_base_frame' />"

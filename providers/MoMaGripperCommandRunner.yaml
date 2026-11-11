@@ -1,0 +1,24 @@
+%YAML 1.1
+---
+name: MoMaGripperCommandRunner
+spec_type: provider
+spec_version: 1.2
+description: "Omron MoMa soft two-finger gripper position and effort provider."
+implements: omron_moma_capabilities/MoMaGripperCommandRunner
+runner: capabilities2_runner::GripperCommandRunner
+depends_on:
+  "gripper_capabilities/GripperLaunchRunner":
+    provider: "gripper_capabilities/GripperLaunchRunner"
+definition:
+  command: "<Runner interface=omron_moma_capabilities/MoMaGripperCommandRunner provider=omron_moma_capabilities/MoMaGripperCommandRunner position='$position' max_effort='$max_effort' />"
+  configuration_parameters:
+    - name: position
+      type: double
+      semantic_key: gripper.command.position
+      description: "Target gripper opening; validate limits for the deployed gripper."
+    - name: max_effort
+      type: double
+      optional: true
+      default: 0.0
+      semantic_key: gripper.command.max_effort
+      description: "Requested gripper effort when supported by the active driver."

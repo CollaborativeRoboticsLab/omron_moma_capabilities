@@ -1,0 +1,7 @@
+%YAML 1.1
+---
+name: MoMaGripperStateRunner
+spec_type: semantic_interface
+spec_version: 1.2
+description: "Reads the soft two-finger gripper state on the Omron MoMa platform."
+redefines: gripper_capabilities/GripperStateRunner

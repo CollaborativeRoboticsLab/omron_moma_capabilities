@@ -1,0 +1,19 @@
+%YAML 1.1
+---
+name: MoMaMobileManipulatorLaunchRunner
+spec_type: provider
+spec_version: 1.2
+description: "Starts only the mobile-manipulator coordinator after the MoMa robot and grasping stack are ready."
+implements: omron_moma_capabilities/MoMaMobileManipulatorLaunchRunner
+runner: grasping_omron_moma/task_feasibility.launch.py
+depends_on:
+  "nav2_capabilities/Nav2LaunchRunner":
+    provider: "omron_moma_capabilities/MoMaNav2LaunchRunner"
+  "grasping_capabilities/GraspingLaunchRunner":
+    provider: "omron_moma_capabilities/MoMaGraspingLaunchRunner"
+definition:
+  launch_readiness:
+    service:
+      name: check_task_feasibility
+      type: mobile_manipulator_msgs/srv/CheckTaskFeasibility
+      timeout: 60.0

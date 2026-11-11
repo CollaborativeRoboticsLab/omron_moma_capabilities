@@ -1,0 +1,7 @@
+%YAML 1.1
+---
+name: MoMaWaypointRunner
+spec_type: semantic_interface
+spec_version: 1.2
+description: "Omron MoMa waypoint navigation through its managed LD250 Nav2 stack."
+redefines: nav2_capabilities/WaypointRunner

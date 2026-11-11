@@ -1,0 +1,7 @@
+%YAML 1.1
+---
+name: MoMaMoveToNamedPoseRunner
+spec_type: semantic_interface
+spec_version: 1.2
+description: "Moves the Omron MoMa TM12X arm to a configured named pose."
+redefines: grasping_capabilities/MoveToNamedPoseRunner

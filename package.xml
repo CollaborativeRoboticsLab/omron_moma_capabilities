@@ -3,7 +3,7 @@
 <package format="3">
   <name>omron_moma_capabilities</name>
   <version>0.1.0</version>
-  <description>Standalone Omron MOMA capability plans and launch wrappers for separate Nav2, grasping, and gripper testing.</description>
+  <description>Omron MoMa semantic capability interfaces, providers, and plans integrating navigation, gripper, grasping, and mobile-manipulator APIs.</description>
   <maintainer email="kalanaratnayake95@gmail.com">ubuntu</maintainer>
   <license>MIT</license>
 
@@ -13,14 +13,96 @@
   <depend>launch</depend>
   <depend>launch_ros</depend>
   <exec_depend>fabric_server</exec_depend>
+  <exec_depend>grasping_control</exec_depend>
   <exec_depend>grasping_capabilities</exec_depend>
+  <exec_depend>grasping_omron_moma</exec_depend>
   <exec_depend>gripper_capabilities</exec_depend>
+  <exec_depend>mobile_manipulator_capabilities</exec_depend>
+  <exec_depend>mobile_manipulator_ros</exec_depend>
+  <exec_depend>moma_ros</exec_depend>
   <exec_depend>nav2_capabilities</exec_depend>
+  <exec_depend>capabilities2_runner</exec_depend>
 
   <test_depend>ament_lint_auto</test_depend>
   <test_depend>ament_lint_common</test_depend>
 
   <export>
     <build_type>ament_cmake</build_type>
+
+    <semantic_capability_interface>
+      semantic_interfaces/MoMaWaypointRunner.yaml
+    </semantic_capability_interface>
+    <semantic_capability_interface>
+      semantic_interfaces/MoMaRobotposeRunner.yaml
+    </semantic_capability_interface>
+    <semantic_capability_interface>
+      semantic_interfaces/MoMaGripperCommandRunner.yaml
+    </semantic_capability_interface>
+    <semantic_capability_interface>
+      semantic_interfaces/MoMaGripperStateRunner.yaml
+    </semantic_capability_interface>
+    <semantic_capability_interface>
+      semantic_interfaces/MoMaMoveToCartesianPoseRunner.yaml
+    </semantic_capability_interface>
+    <semantic_capability_interface>
+      semantic_interfaces/MoMaMoveToJointPoseRunner.yaml
+    </semantic_capability_interface>
+    <semantic_capability_interface>
+      semantic_interfaces/MoMaMoveToNamedPoseRunner.yaml
+    </semantic_capability_interface>
+    <semantic_capability_interface>
+      semantic_interfaces/MoMaCheckTaskFeasibilityRunner.yaml
+    </semantic_capability_interface>
+    <semantic_capability_interface>
+      semantic_interfaces/MoMaFindFeasiblePoseRunner.yaml
+    </semantic_capability_interface>
+    <semantic_capability_interface>
+      semantic_interfaces/MoMaExecuteTaskPoseRunner.yaml
+    </semantic_capability_interface>
+
+    <capability_interface>
+      interfaces/MoMaMobileManipulatorLaunchRunner.yaml
+    </capability_interface>
+
+    <capability_provider>
+      providers/MoMaNav2LaunchRunner.yaml
+    </capability_provider>
+
+    <capability_provider>
+      providers/MoMaWaypointRunner.yaml
+    </capability_provider>
+    <capability_provider>
+      providers/MoMaRobotposeRunner.yaml
+    </capability_provider>
+    <capability_provider>
+      providers/MoMaGripperCommandRunner.yaml
+    </capability_provider>
+    <capability_provider>
+      providers/MoMaGripperStateRunner.yaml
+    </capability_provider>
+    <capability_provider>
+      providers/MoMaGraspingLaunchRunner.yaml
+    </capability_provider>
+    <capability_provider>
+      providers/MoMaMoveToCartesianPoseRunner.yaml
+    </capability_provider>
+    <capability_provider>
+      providers/MoMaMoveToJointPoseRunner.yaml
+    </capability_provider>
+    <capability_provider>
+      providers/MoMaMoveToNamedPoseRunner.yaml
+    </capability_provider>
+    <capability_provider>
+      providers/MoMaMobileManipulatorLaunchRunner.yaml
+    </capability_provider>
+    <capability_provider>
+      providers/MoMaCheckTaskFeasibilityRunner.yaml
+    </capability_provider>
+    <capability_provider>
+      providers/MoMaFindFeasiblePoseRunner.yaml
+    </capability_provider>
+    <capability_provider>
+      providers/MoMaExecuteTaskPoseRunner.yaml
+    </capability_provider>
   </export>
 </package>

@@ -1,0 +1,7 @@
+%YAML 1.1
+---
+name: MoMaFindFeasiblePoseRunner
+spec_type: semantic_interface
+spec_version: 1.2
+description: "Searches validated base-pose candidates for the Omron MoMa platform."
+redefines: mobile_manipulator_capabilities/FindFeasiblePoseRunner

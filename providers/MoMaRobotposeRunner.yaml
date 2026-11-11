@@ -1,0 +1,38 @@
+%YAML 1.1
+---
+name: MoMaRobotposeRunner
+spec_type: provider
+spec_version: 1.2
+description: "Omron MoMa robot pose from the map, odom, and base_link transforms."
+implements: omron_moma_capabilities/MoMaRobotposeRunner
+runner: capabilities2_runner::RobotPoseRunner
+depends_on:
+  "nav2_capabilities/Nav2LaunchRunner":
+    provider: "omron_moma_capabilities/MoMaNav2LaunchRunner"
+definition:
+  command: "<Runner interface=omron_moma_capabilities/MoMaRobotposeRunner provider=omron_moma_capabilities/MoMaRobotposeRunner map='$map' odom='$odom' robot='$robot' time_buffer='$time_buffer' />"
+  configuration_parameters:
+    - name: map
+      type: string
+      optional: true
+      default: "map"
+      semantic_key: nav2.robot_pose.map
+      description: "The global frame to try first when resolving the robot pose."
+    - name: odom
+      type: string
+      optional: true
+      default: "odom"
+      semantic_key: nav2.robot_pose.odom
+      description: "The fallback odometry frame."
+    - name: robot
+      type: string
+      optional: true
+      default: "base_link"
+      semantic_key: nav2.robot_pose.robot
+      description: "The Omron MoMa mobile-base frame."
+    - name: time_buffer
+      type: double
+      optional: true
+      default: 5.0
+      semantic_key: nav2.robot_pose.time_buffer
+      description: "The TF lookup timeout in seconds."

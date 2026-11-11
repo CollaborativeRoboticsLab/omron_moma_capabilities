@@ -1,31 +1,44 @@
 # Omron Mobile Manipulator Capabilities
 
-Omron MoMa specific capability plans and launch wrappers.
+Omron MoMa specializes the generic navigation, gripper, grasping, and mobile-manipulator capability interfaces with MoMa providers and semantic APIs.
 
 ## Purpose
 
-This package currently contains generative and non-generative execution plans for the Omron MOMA setup. It does not inherit from `mobile_manipulator` and assumes the robot is capable of using nav2 and moveit independently. 
+```mermaid
+flowchart LR
+	N["nav2_capabilities<br/>Generic navigation"]
+	G["gripper_capabilities<br/>Generic gripper"]
+	R["grasping_capabilities<br/>Generic arm motion"]
+	D["mobile_manipulator_capabilities<br/>Generic mobile-manipulator adapters"]
+	M["omron_moma_capabilities<br/>MoMa semantic APIs and integration providers"]
+	N -->|"redefines"| M
+	G -->|"redefines"| M
+	R -->|"redefines"| M
+	D -->|"redefines"| M
+```
 
-The current plans utilize and builds on top of following capability packages:
+MoMa semantic interfaces redefine the generic interfaces directly. The current capabilities2 loader does not support semantic interfaces redefining other semantic interfaces.
 
-- [nav2_capabilities](https://github.com/CollaborativeRoboticsLab/nav2_capabilities) plans for base-only navigation
-- [grasping_capabilities](https://github.com/CollaborativeRoboticsLab/grasping_capabilities) plans for arm-only MoveIt and grasping actions
-- [gripper_capabilities](https://github.com/CollaborativeRoboticsLab/gripper_capabilities) plans for isolated gripper command testing
+## Launch ownership
 
-## Ownership Boundary
+- `MoMaNav2LaunchRunner` starts `moma_ros/ld250_tm12x.launch.py`, which owns the LD250 base, TM12X arm, MoveIt, and Nav2 bringup.
+- `MoMaGraspingLaunchRunner` starts only the grasping motion-execution nodes with the MoMa motion and workspace configuration; it depends on the MoMa Nav2 launch provider rather than starting another robot stack.
+- MoMa gripper command/state providers depend on `gripper_capabilities/GripperLaunchRunner`.
+- `MoMaMobileManipulatorLaunchRunner` starts the MoMa task-feasibility coordinator after the robot and grasping providers are ready.
 
-- [grasping](https://github.com/CollaborativeRoboticsLab/grasping) owns active scene management, MoveIt planning-scene updates, arm-only feasibility, and arm execution.
-- [gripper](https://github.com/CollaborativeRoboticsLab/grippers) owns isolated gripper command execution.
-- [omron_moma](https://github.com/CollaborativeRoboticsLab/omron_moma) owns Omron MoMa specific Nav2 and MoveIt2 configuration and launch files.
+Do not launch another whole-platform bringup alongside the MoMa Nav2 provider. In particular, do not combine this provider with `grasping_omron_moma/ld250_tm12x_soft_two_fingers.launch.py`, which also owns robot bringup.
 
 ## Plan Groups
 
 | Group | Plans | Purpose |
 | --- | --- | --- |
-| Grasping | `moma_grasp_1.xml` to `moma_grasp_4.xml` | Cartesian, joint-space, and named-pose arm motion through `grasping_capabilities`. Uses non-generative execution plans. |
-| Nav2 | `moma_nav2_1.xml`, `moma_nav2_2.xml` | Base-only waypoint navigation through `nav2_capabilities`. Uses non-generative execution plans. |
-| Gripper | `moma_gripper_1.xml`, `moma_gripper_2.xml` | Standalone gripper open/close tests through `gripper_capabilities`. Uses non-generative execution plans. |
-| Generative | `moma_generative_1.xml` to `moma_generative_2.xml` | Example generative execution plan for the Omron MoMa setup around both navigation and manipulation. Uses generative execution plans. |
+| Navigation | `moma_nav2_1.xml`, `moma_nav2_2.xml` | MoMa waypoint navigation through its semantic interface. |
+| Grasping | `moma_grasp_1.xml` to `moma_grasp_4.xml` | Cartesian, joint-space, and named-pose arm motion. |
+| Gripper | `moma_gripper_1.xml`, `moma_gripper_2.xml` | Gripper command examples using the MoMa gripper provider. |
+| Mobile manipulator | `moma_mobile_manipulator_1.xml` to `moma_mobile_manipulator_4.xml` | Feasibility checks, base-pose search, and execution with explicit validation/approval inputs. |
+| Generative | `moma_generative_1.xml` to `moma_generative_5.xml` | Prompt-generated navigation/manipulation plan examples. |
+
+All pose, joint, and waypoint values are illustrative and unvalidated for a physical robot or site. Mobile-manipulator execution requires a validated task pose and an explicitly approved base pose. Generated plans are automatically queued without a review pause; do not use them on hardware without an independent approval gate.
 
 ## Build
 
@@ -36,32 +49,13 @@ colcon build --packages-up-to omron_moma_capabilities --symlink-install
 
 ## Runtime
 
-Start the capabilities2 stack
+The system wrapper starts Fabric and Capabilities2. Providers start their declared dependencies on demand.
 
 ```bash
 source install/setup.bash
-ros2 launch capabilities2_server capabilities2_server.launch.py
+ros2 launch omron_moma_capabilities system.launch.py filename:=moma_nav2_1.xml
 ```
 
-```bash
-source install/setup.bash
-ros2 launch omron_moma_capabilities grasping.launch.py
-```
-
-Nav2 example:
-
-```bash
-source install/setup.bash
-ros2 launch omron_moma_capabilities nav2.launch.py
-```
-
-Gripper example:
-
-```bash
-source install/setup.bash
-ros2 launch omron_moma_capabilities gripper.launch.py
-```
-
-Override the plan file with `filename:=...` when you want to run a different example from the same group.
+Use the same wrapper with another plan filename. The MoMa Nav2 provider uses `moma_ros` launch defaults for robot IP and simulation mode; verify those settings and all robot-specific configuration before any physical run. No robot launch or motion is performed by building this package.
 
 For more detail, see [docs/standalone_testing.md](./docs/standalone_testing.md).

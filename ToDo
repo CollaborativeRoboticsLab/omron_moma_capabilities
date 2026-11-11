@@ -1,5 +1,24 @@
 # Mobile Manipulator Remaining Work
 
+Current state: MoMa semantic interfaces redefine generic navigation, grasping, gripper, and mobile-manipulator interfaces directly. Generic grasping/gripper runners and specialized robot packages are separated, and the common wrapper arguments have been aligned. Static MoMa export and reference checks passed, but the latest MoMa build was blocked by missing installed mobile-manipulator and grasping dependencies. No robot motion, deployed-robot validation, or workspace-wide capability audit has been performed.
+
+## 0. Capability Alignment and Handoff
+
+- [ ] Use `omron_amr_capabilities` as the new-format reference for every capability in the workspace; reconcile generative plans and runner documentation with the supported Fabric contract and its automatic queueing.
+- [ ] Discover all capability-exporting workspace packages, including definitions outside `*_capabilities`; inventory and migrate every interface, provider and semantic interface to the new format, recording conforming definitions and blockers.
+- [ ] Map every plan reference and capability dependency to an installed specification; verify exports, installation and discovery across all migrated packages.
+- [ ] Audit remaining capability packages for launch-backed dependencies that are actually disabled or missing; enable only applicable launch runners through the supported proxy.
+- [ ] Agree and implement safe managed versus externally started Nav2/perception ownership, robot-specific configuration, readiness, stop and failure behavior.
+- [ ] Keep MoMa semantics on generic bases for now; verify their providers, robot-specific contracts, and compatibility with generic and multi-robot discovery.
+- [ ] Plan and implement cascading semantic inheritance in Capabilities2 as described in `proposed_changes.md`; migrate MoMa to specialized semantic parents only after compatibility and safety checks pass.
+- [ ] Verify semantic runnable selection, provider conflicts, remappings, and lifecycle for explicit and generated plans.
+- [ ] Audit remaining launch wrappers, Fabric arguments, default plan selection, runtime dependencies, and documentation against the supported APIs.
+- [ ] Run workspace-wide XML parsing and verify every packaged plan's runner interfaces/providers against installed capability specifications; add regression coverage.
+- [ ] Correct Omron launch documentation and verify deployed joint names, poses, frames, gripper limits and example tasks.
+- [ ] Provide or document a supported entry point for generic mobile-manipulator plans; preserve the ownership boundary.
+- [ ] Resolve missing installed dependencies and build/test `omron_moma_capabilities`; run remaining targeted tests and non-motion simulation integration, record unavailable checks, and obtain approval before any robot motion.
+- [ ] Submit the implementation, evidence and unresolved decisions for review.
+
 ## 1. Validation First
 
 - [ ] Re-run planner-level and robot-level end-to-end validation after the latest refactor, including the new scene-management runtime.

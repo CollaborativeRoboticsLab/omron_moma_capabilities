@@ -1,0 +1,7 @@
+%YAML 1.1
+---
+name: MoMaMoveToCartesianPoseRunner
+spec_type: semantic_interface
+spec_version: 1.2
+description: "Moves the Omron MoMa TM12X tool frame to a Cartesian target."
+redefines: grasping_capabilities/MoveToCartesianPoseRunner

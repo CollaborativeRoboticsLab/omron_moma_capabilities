@@ -1,0 +1,17 @@
+%YAML 1.1
+---
+name: MoMaGraspingLaunchRunner
+spec_type: provider
+spec_version: 1.2
+description: "Starts grasping motion execution without starting a second robot or MoveIt stack."
+implements: grasping_capabilities/GraspingLaunchRunner
+runner: omron_moma_capabilities/grasping.launch.py
+depends_on:
+  "nav2_capabilities/Nav2LaunchRunner":
+    provider: "omron_moma_capabilities/MoMaNav2LaunchRunner"
+definition:
+  launch_readiness:
+    action:
+      name: move_arm_to_pose
+      type: grasping_msgs/action/MoveToPose
+      timeout: 60.0

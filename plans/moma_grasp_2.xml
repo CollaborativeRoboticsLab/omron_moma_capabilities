@@ -2,9 +2,9 @@
 <Plan>
     <Control type="sequential" name="single_joint_move">
         <Runner
-            interface="grasping_capabilities/MoveToJointPoseRunner"
-            provider="grasping_capabilities/MoveToJointPoseRunner"
-            joint_names="[shoulder_pan_joint, shoulder_lift_joint, elbow_joint, wrist_1_joint, wrist_2_joint, wrist_3_joint]"
+            interface="omron_moma_capabilities/MoMaMoveToJointPoseRunner"
+            provider="omron_moma_capabilities/MoMaMoveToJointPoseRunner"
+            joint_names="[joint_1, joint_2, joint_3, joint_4, joint_5, joint_6]"
             joint_positions="[0.0, -1.57, 1.57, -1.57, -1.57, 0.0]" />
     </Control>
 </Plan>

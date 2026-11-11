@@ -1,0 +1,13 @@
+%YAML 1.1
+---
+name: MoMaMoveToNamedPoseRunner
+spec_type: provider
+spec_version: 1.2
+description: "Omron MoMa named-pose arm motion using the shared robot stack."
+implements: omron_moma_capabilities/MoMaMoveToNamedPoseRunner
+runner: capabilities2_runner::MoveToNamedPoseRunner
+depends_on:
+  "grasping_capabilities/GraspingLaunchRunner":
+    provider: "omron_moma_capabilities/MoMaGraspingLaunchRunner"
+definition:
+  command: "<Runner interface=omron_moma_capabilities/MoMaMoveToNamedPoseRunner provider=omron_moma_capabilities/MoMaMoveToNamedPoseRunner pose_name='$pose_name' />"

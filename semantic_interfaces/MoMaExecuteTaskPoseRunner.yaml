@@ -1,0 +1,7 @@
+%YAML 1.1
+---
+name: MoMaExecuteTaskPoseRunner
+spec_type: semantic_interface
+spec_version: 1.2
+description: "Executes an explicitly validated Omron MoMa task and approved base pose."
+redefines: mobile_manipulator_capabilities/ExecuteTaskPoseRunner
