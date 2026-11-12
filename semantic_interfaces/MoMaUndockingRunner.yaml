@@ -1,0 +1,7 @@
+%YAML 1.1
+---
+name: MoMaUndockingRunner
+spec_type: semantic_interface
+spec_version: 1.2
+description: "Undock the Omron MoMa mobile base using its driver action server."
+redefines: nav2_capabilities/UndockingRunner

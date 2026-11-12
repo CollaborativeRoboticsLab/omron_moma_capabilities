@@ -1,0 +1,23 @@
+%YAML 1.1
+---
+name: MoMaUndockingRunner
+spec_type: provider
+spec_version: 1.2
+description: "Undock the Omron MoMa mobile base using its driver action server."
+implements: omron_moma_capabilities/MoMaUndockingRunner
+runner: capabilities2_runner::UndockingRunner
+definition:
+  command: "<Runner interface='omron_moma_capabilities/MoMaUndockingRunner' provider='omron_moma_capabilities/MoMaUndockingRunner' dock_type='$dock_type' max_undocking_time='$max_undocking_time' />"
+  configuration_parameters:
+    - name: dock_type
+      type: string
+      optional: true
+      default: ""
+      semantic_key: nav2.undocking.dock_type
+      description: "Dock type; an empty value leaves selection to the action server."
+    - name: max_undocking_time
+      type: double
+      optional: true
+      default: 30.0
+      semantic_key: nav2.undocking.max_undocking_time
+      description: "Maximum undocking time in seconds; must be positive."

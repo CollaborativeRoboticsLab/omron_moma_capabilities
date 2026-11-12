@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Plan>
     <Control type="sequential" name="single_point_navigation">
+        <Runner interface="omron_moma_capabilities/MoMaUndockingRunner" provider="omron_moma_capabilities/MoMaUndockingRunner" />
         <Runner interface="omron_moma_capabilities/MoMaWaypointRunner" provider="omron_moma_capabilities/MoMaWaypointRunner" x="0.5" y="2.0" />
     </Control>
 </Plan>

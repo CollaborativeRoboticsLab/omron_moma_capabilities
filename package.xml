@@ -36,6 +36,9 @@
       semantic_interfaces/MoMaRobotposeRunner.yaml
     </semantic_capability_interface>
     <semantic_capability_interface>
+      semantic_interfaces/MoMaUndockingRunner.yaml
+    </semantic_capability_interface>
+    <semantic_capability_interface>
       semantic_interfaces/MoMaGripperCommandRunner.yaml
     </semantic_capability_interface>
     <semantic_capability_interface>
@@ -73,6 +76,9 @@
     </capability_provider>
     <capability_provider>
       providers/MoMaRobotposeRunner.yaml
+    </capability_provider>
+    <capability_provider>
+      providers/MoMaUndockingRunner.yaml
     </capability_provider>
     <capability_provider>
       providers/MoMaGripperCommandRunner.yaml
