@@ -22,6 +22,7 @@ RUN apt-get update && apt-get install --no-install-recommends -y \
     libeigen3-dev \
     libcurl4-openssl-dev \
     nlohmann-json3-dev \
+    python3-pyqt5 \
     python3-yaml \
     qt5-qmake \
     qtbase5-dev \
@@ -35,6 +36,10 @@ RUN apt-get update && apt-get install --no-install-recommends -y \
     ros-${ROS_DISTRO}-tinyxml2-vendor \
     ros-${ROS_DISTRO}-diagnostic-msgs \
     ros-${ROS_DISTRO}-backward-ros \
+    ros-${ROS_DISTRO}-python-qt-binding \
+    ros-${ROS_DISTRO}-qt-gui \
+    ros-${ROS_DISTRO}-rqt-gui \
+    ros-${ROS_DISTRO}-rqt-gui-py \
     ros-${ROS_DISTRO}-moveit \
     ros-${ROS_DISTRO}-moveit-configs-utils \
     ros-${ROS_DISTRO}-moveit-kinematics \
