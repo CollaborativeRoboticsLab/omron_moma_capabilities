@@ -29,6 +29,7 @@ RUN apt-get update && apt-get install --no-install-recommends -y \
     libportaudio2 \
     portaudio19-dev \
     python3-pyaudio \
+    python3-serial \
     alsa-utils \
     ros-${ROS_DISTRO}-vision-opencv \
     ros-${ROS_DISTRO}-cv-bridge \
@@ -57,6 +58,9 @@ RUN apt-get update && apt-get install --no-install-recommends -y \
     ros-${ROS_DISTRO}-navigation2 \
     ros-${ROS_DISTRO}-teleop-twist-keyboard \
     ros-${ROS_DISTRO}-teleop-twist-joy \
+    ros-${ROS_DISTRO}-librealsense2* \
+    ros-${ROS_DISTRO}-realsense2-* \
+    ros-${ROS_DISTRO}-dynamixel-sdk \
     && rm -rf /var/lib/apt/lists/*
     
 RUN echo $USERNAME ALL=\(root\) NOPASSWD:ALL > /etc/sudoers.d/$USERNAME \
