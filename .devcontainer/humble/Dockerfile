@@ -86,12 +86,12 @@ RUN git clone https://github.com/CollaborativeRoboticsLab/grippers.git
 RUN git clone https://github.com/CollaborativeRoboticsLab/tmr_ros2.git
 RUN git clone --recurse-submodules https://github.com/CollaborativeRoboticsLab/omron_amr.git
 RUN git clone https://github.com/CollaborativeRoboticsLab/omron_moma.git
-# RUN git clone https://github.com/CollaborativeRoboticsLab/mobile_manipulator.git
-# RUN git clone https://github.com/CollaborativeRoboticsLab/mobile_manipulator_capabilities.git
-# RUN git clone https://github.com/CollaborativeRoboticsLab/grasping_capabilities.git -b experience-integration
-# RUN git clone https://github.com/CollaborativeRoboticsLab/gripper_capabilities.git -b experience-integration
-# RUN git clone https://github.com/CollaborativeRoboticsLab/grasping_omron_moma.git
-# RUN git clone https://github.com/CollaborativeRoboticsLab/supervisor.git
-# RUN git clone https://github.com/CollaborativeRoboticsLab/experience.git
-# RUN git clone https://github.com/CollaborativeRoboticsLab/fabric_generator_experience.git
-# RUN git clone https://github.com/CollaborativeRoboticsLab/fabric_generator_prompttools.git
+RUN git clone https://github.com/CollaborativeRoboticsLab/mobile_manipulator.git
+RUN git clone https://github.com/CollaborativeRoboticsLab/mobile_manipulator_capabilities.git
+RUN git clone https://github.com/CollaborativeRoboticsLab/grasping_capabilities.git -b experience-integration
+RUN git clone https://github.com/CollaborativeRoboticsLab/gripper_capabilities.git -b experience-integration
+RUN git clone https://github.com/CollaborativeRoboticsLab/grasping_omron_moma.git
+RUN git clone https://github.com/CollaborativeRoboticsLab/fabric_generator_prompttools.git
+RUN git clone https://github.com/CollaborativeRoboticsLab/omron_amr_capabilities.git
+RUN git clone https://github.com/CollaborativeRoboticsLab/omron_gripper_capabilities.git
+RUN git clone https://github.com/CollaborativeRoboticsLab/omron_grasping_capabilities.git tmr_ros2_grasping_capabilities
