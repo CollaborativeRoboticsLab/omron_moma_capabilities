@@ -108,7 +108,7 @@ RUN git clone https://github.com/CollaborativeRoboticsLab/grasping_capabilities.
 RUN git clone https://github.com/CollaborativeRoboticsLab/grasping_omron_moma.git
 
 RUN git clone https://github.com/CollaborativeRoboticsLab/omron_moma.git
-RUN git clone https://github.com/CollaborativeRoboticsLab/omron_moma_simulation.git
+RUN git clone https://github.com/CollaborativeRoboticsLab/omron_moma_simulations.git
 
 RUN git clone https://github.com/CollaborativeRoboticsLab/mobile_manipulator.git
 RUN git clone https://github.com/CollaborativeRoboticsLab/mobile_manipulator_capabilities.git
