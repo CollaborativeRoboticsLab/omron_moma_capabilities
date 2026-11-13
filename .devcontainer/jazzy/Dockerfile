@@ -79,24 +79,36 @@ RUN echo "source /opt/ros/${ROS_DISTRO}/setup.bash" >> ~/.bashrc
 WORKDIR /home/$USERNAME/colcon_ws/src
 
 RUN git clone https://github.com/CollaborativeRoboticsLab/capabilities2.git -b experience-integration
+
 RUN git clone https://github.com/CollaborativeRoboticsLab/fabric.git -b experience-integration
 RUN git clone https://github.com/CollaborativeRoboticsLab/fabric_capabilities.git -b experience-integration
-RUN git clone --recurse-submodules https://github.com/CollaborativeRoboticsLab/prompt_tools.git -b experience-integration
-RUN git clone https://github.com/CollaborativeRoboticsLab/prompt_capabilities.git -b experience-integration
+RUN git clone https://github.com/CollaborativeRoboticsLab/fabric_experience_gui.git
+
 RUN git clone https://github.com/CollaborativeRoboticsLab/fp_perception.git -b experience-integration
 RUN git clone https://github.com/CollaborativeRoboticsLab/fp_perception_capabilities.git -b experience-integration
+
+RUN git clone --recurse-submodules https://github.com/CollaborativeRoboticsLab/prompt_tools.git -b experience-integration
+RUN git clone https://github.com/CollaborativeRoboticsLab/prompt_capabilities.git -b experience-integration
+RUN git clone https://github.com/CollaborativeRoboticsLab/fabric_generator_prompttools.git
+
 RUN git clone https://github.com/CollaborativeRoboticsLab/nav2_capabilities.git -b experience-integration
-RUN git clone https://github.com/CollaborativeRoboticsLab/grasping.git
-RUN git clone https://github.com/CollaborativeRoboticsLab/grippers.git
-RUN git clone https://github.com/CollaborativeRoboticsLab/tmr_ros2.git
 RUN git clone --recurse-submodules https://github.com/CollaborativeRoboticsLab/omron_amr.git
+RUN git clone https://github.com/CollaborativeRoboticsLab/omron_amr_capabilities.git
+RUN git clone https://github.com/CollaborativeRoboticsLab/omron_amr_simulation.git
+
+RUN git clone https://github.com/CollaborativeRoboticsLab/tmr_ros2.git
+RUN git clone https://github.com/CollaborativeRoboticsLab/tmr_ros2_grasping_capabilities.git
+
+RUN git clone https://github.com/CollaborativeRoboticsLab/grippers.git
+RUN git clone https://github.com/CollaborativeRoboticsLab/gripper_capabilities.git -b experience-integration
+RUN git clone https://github.com/CollaborativeRoboticsLab/omron_gripper_capabilities.git
+
+RUN git clone https://github.com/CollaborativeRoboticsLab/grasping.git
+RUN git clone https://github.com/CollaborativeRoboticsLab/grasping_capabilities.git -b experience-integration
+RUN git clone https://github.com/CollaborativeRoboticsLab/grasping_omron_moma.git
+
 RUN git clone https://github.com/CollaborativeRoboticsLab/omron_moma.git
+RUN git clone https://github.com/CollaborativeRoboticsLab/omron_moma_simulation.git
+
 RUN git clone https://github.com/CollaborativeRoboticsLab/mobile_manipulator.git
 RUN git clone https://github.com/CollaborativeRoboticsLab/mobile_manipulator_capabilities.git
-RUN git clone https://github.com/CollaborativeRoboticsLab/grasping_capabilities.git -b experience-integration
-RUN git clone https://github.com/CollaborativeRoboticsLab/gripper_capabilities.git -b experience-integration
-RUN git clone https://github.com/CollaborativeRoboticsLab/grasping_omron_moma.git
-RUN git clone https://github.com/CollaborativeRoboticsLab/fabric_generator_prompttools.git
-RUN git clone https://github.com/CollaborativeRoboticsLab/omron_amr_capabilities.git
-RUN git clone https://github.com/CollaborativeRoboticsLab/omron_gripper_capabilities.git
-RUN git clone https://github.com/CollaborativeRoboticsLab/omron_grasping_capabilities.git tmr_ros2_grasping_capabilities
